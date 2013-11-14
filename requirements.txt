@@ -1,2 +1,5 @@
-Flask==0.9
+Flask
 boto
+requests
+m2crypto
+yapsy==1.10.2-pythons2n3
