@@ -2,4 +2,4 @@ Flask
 boto
 requests
 yapsy==1.10.2-pythons2n3
-m2crypto
+git+https://github.com/martinpaljak/M2Crypto.git
