@@ -1,5 +1,5 @@
 Flask
-boto
+boto>=2.19.0
 requests
-yapsy==1.10.2-pythons2n3
-git+https://github.com/martinpaljak/M2Crypto.git
+yapsy
+pyOpenSSL

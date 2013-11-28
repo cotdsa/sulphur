@@ -2,9 +2,7 @@ import re
 import requests
 import base64
 import boto.sns
-
-from hashlib import sha1
-from M2Crypto import X509, RSA
+import OpenSSL.crypto
 
 def parse_sns_arn(arn):
     regex = re.compile(r"arn:aws:sns:(?P<region>[a-z0-9-]+):(?P<account_id>[0-9]+):(?P<sns_id>.+)")
@@ -36,14 +34,13 @@ def build_signature_string(data_dict):
 def verify_signature(cert_url, signature, data):
     cert = requests.get(cert_url)
     if cert.status_code == 200:
-        x509obj = X509.load_cert_string(cert.content, X509.FORMAT_PEM)
-        pubkey = x509obj.get_pubkey().get_rsa()
+        x509obj = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert.content)
         ds = base64.b64decode(signature)
         try:
-            pubkey.verify(sha1(data).digest(), ds)
+            OpenSSL.crypto.verify(x509obj, ds, data, 'sha1')
             return True
-        except RSA.RSAError:
-            return False
+        except OpenSSL.crypto.Error:
+            raise
     return False
 
 def subscribe_sns_topic(token, topic_arn, authenticate_on_unsubscribe=False):
