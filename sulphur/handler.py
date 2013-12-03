@@ -143,6 +143,7 @@ class CustomResourceHandler(object):
                         print "Unknown operation"
                 except Exception, e:
                     print str(e)
+                    resp_obj.reason = str(e)
                     pass
 
                 plg.plugin_object.deactivate()
