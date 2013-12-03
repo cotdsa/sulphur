@@ -131,15 +131,19 @@ class CustomResourceHandler(object):
                 plg.plugin_object.setProperties(self.res_properties)
                 plg.plugin_object.setResponse(resp_obj)
                 plg.plugin_object.setOldProperties(self.old_res_properties)
-                if self.request_type == 'Create':
-                    resp_obj.physical_resource_id = 'SULPH-%s-%s' % (self.logical_resource_id, str(uuid.uuid4()))
-                    plg.plugin_object.create()
-                elif self.request_type == 'Update':
-                    plg.plugin_object.update()
-                elif self.request_type == 'Delete':
-                    plg.plugin_object.delete()
-                else:
-                    print "Unknown operation"
+                try:
+                    if self.request_type == 'Create':
+                        resp_obj.physical_resource_id = 'SULPH-%s-%s' % (self.logical_resource_id, str(uuid.uuid4()))
+                        plg.plugin_object.create()
+                    elif self.request_type == 'Update':
+                        plg.plugin_object.update()
+                    elif self.request_type == 'Delete':
+                        plg.plugin_object.delete()
+                    else:
+                        print "Unknown operation"
+                except Exception, e:
+                    print str(e)
+                    pass
 
                 plg.plugin_object.deactivate()
             else:
