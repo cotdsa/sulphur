@@ -11,7 +11,7 @@ class SetELBCrossZoneHandler(CFCustomResourceHandler):
         elb = self.properties.get('LoadBalancerName')
         value = self.properties.get('EnableCrossZoneLoadBalancing')
 
-        if region not in boto.ec2.elb.regions():
+        if region not in [ region.name for region in boto.ec2.elb.regions() ]:
             self.response.reason = 'Region %s is not supported or invalid' % region
             return
 
