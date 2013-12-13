@@ -3,3 +3,4 @@ boto>=2.19.0
 requests
 yapsy
 pyOpenSSL
+python-dateutil
