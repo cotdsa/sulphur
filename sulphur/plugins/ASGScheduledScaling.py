@@ -8,6 +8,7 @@ class ASGScheduledScalingHandler(CFCustomResourceHandler):
     # This handler manages and hosted zone in route 53
     #
     # Required IAM permissions:
+    # - autoscaling:DescribeScheduledActions
     # - autoscaling:PutScheduledUpdateGroupAction
     # - autoscaling:DeleteScheduledAction
 
@@ -51,7 +52,6 @@ class ASGScheduledScalingHandler(CFCustomResourceHandler):
             end_time_dt = dateutil.parser.parse(end_time)
 
         conn = boto.ec2.autoscale.connect_to_region(region_name=region)
-        assert isinstance(conn, boto.ec2.autoscale.AutoScaleConnection)
 
         res = conn.create_scheduled_group_action(as_group=asg, name=group_action_id,
                                                  desired_capacity=desired_capacity,
@@ -84,11 +84,13 @@ class ASGScheduledScalingHandler(CFCustomResourceHandler):
             return
 
         conn = boto.ec2.autoscale.connect_to_region(region_name=region)
-        assert isinstance(conn, boto.ec2.autoscale.AutoScaleConnection)
 
-        res = conn.delete_scheduled_action(scheduled_action_name=group_action_id, autoscale_group=asg)
-        if not res:
-            self.response.reason = 'Unable to delete Scheduled Action'
-            return
+        if conn.get_all_scheduled_actions(scheduled_actions=[group_action_id], as_group=asg):
+            res = conn.delete_scheduled_action(scheduled_action_name=group_action_id, autoscale_group=asg)
+            if not res:
+                self.response.reason = 'Unable to delete Scheduled Action'
+                return
+
+        # If no scheduled action with that id can be found then assume it has been deleted manually
 
         self.response.status = 'SUCCESS'
