@@ -2,6 +2,7 @@ import boto.route53
 from boto.route53.zone import Zone
 from sulphur.abstracts import CFCustomResourceHandler
 
+
 class Route53ZoneHandler(CFCustomResourceHandler):
 
     # This handler manages and hosted zone in route 53
@@ -10,11 +11,9 @@ class Route53ZoneHandler(CFCustomResourceHandler):
     # - route53:CreateHostedZone
     # - route53:DeleteHostedZone
 
-
     def create(self):
 
         self.response.status = 'FAILED'
-
 
         zone_name = self.properties.get('ZoneName')
 
@@ -42,8 +41,10 @@ class Route53ZoneHandler(CFCustomResourceHandler):
         # AWS CloudFormation sends an update request to that custom resource.
         # If a custom resource requires a replacement,
         # the new custom resource must send a response with the new physical ID.
-        # When AWS CloudFormation receives the response, it compares the PhysicalResourceId between the old and new custom resources.
-        # If they are different, AWS CloudFormation recognizes the update as a replacement and sends a delete request to the old resource.
+        # When AWS CloudFormation receives the response,
+        # it compares the PhysicalResourceId between the old and new custom resources.
+        # If they are different, AWS CloudFormation recognizes the update
+        # as a replacement and sends a delete request to the old resource.
         #
         # In this case we just need to call create() and CF will issue the delete automatically
         self.create()
@@ -57,5 +58,3 @@ class Route53ZoneHandler(CFCustomResourceHandler):
 
         conn.delete_hosted_zone(hosted_zone_id=zone_id)
         self.response.status = 'SUCCESS'
-
-
