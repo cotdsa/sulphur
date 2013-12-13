@@ -3,6 +3,14 @@ from sulphur.abstracts import CFCustomResourceHandler
 
 class SetELBCrossZoneHandler(CFCustomResourceHandler):
 
+    # This handler allows you to set the CrossZoneLoadBalancing attribute of an ELB
+    #
+    # Required IAM permissions:
+    # - elasticloadbalancing:ModifyLoadBalancerAttributes
+    #
+    # This module requires boto >= 2.18.0
+
+
     def create(self):
 
         self.response.status = 'FAILED'
@@ -18,14 +26,11 @@ class SetELBCrossZoneHandler(CFCustomResourceHandler):
             self.response.reason = 'EnableCrossZoneLoadBalancing must be `true` or `false`'
             return
 
+        b_value = True if value == 'true' else False
+
         conn = boto.ec2.elb.connect_to_region(region)
 
-        params = {
-            'LoadBalancerName': elb,
-            'LoadBalancerAttributes.CrossZoneLoadBalancing.Enabled': value
-        }
-
-        if conn.get_status('ModifyLoadBalancerAttributes', params):
+        if conn.modify_lb_attribute(load_balancer_name=elb, attribute='crosszoneloadbalancing', value=b_value):
             self.response.status = 'SUCCESS'
         else:
             self.response.reason = 'Unable to set CrossZoneLoadBalancing attribute'
