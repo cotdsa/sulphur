@@ -87,7 +87,7 @@ class CustomResourceHandler(object):
     def __init__(self, input_data_dict):
 
         # Initialise plugin system
-        anl = PluginFileAnalyzerMathingRegex('custom_res_handler_plugins', r'^[A-Za-z]+\.py$')
+        anl = PluginFileAnalyzerMathingRegex('custom_res_handler_plugins', r'^[A-Za-z0-9]+\.py$')
         res = PluginFileLocator(plugin_info_cls=CFCustomResourceHandler)
         res.setAnalyzers([anl])
         self.manager = PluginManager(plugin_locator=res, categories_filter={'CFHandlers' : CFCustomResourceHandler})
