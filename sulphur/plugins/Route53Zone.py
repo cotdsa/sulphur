@@ -56,5 +56,6 @@ class Route53ZoneHandler(CFCustomResourceHandler):
         conn = boto.route53.Route53Connection()
 
         conn.delete_hosted_zone(hosted_zone_id=zone_id)
+        self.response.status = 'SUCCESS'
 
 
