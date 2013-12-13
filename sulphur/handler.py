@@ -155,6 +155,7 @@ class CustomResourceHandler(object):
             resp_obj.reason = 'Sulphur: Resource Type must be of form `Custom::<ResourceType>`. Found %s instead.' % self.resource_type
 
         # Respond to CloudFormation
+        print resp_obj.dumps()
         res = requests.put(url=self.response_url, data=resp_obj.dumps(), headers={'content-type': ''})
 
 
