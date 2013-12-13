@@ -106,7 +106,7 @@ class CustomResourceHandler(object):
         self.res_properties = input_data_dict.get('ResourceProperties')
         self.old_res_properties = input_data_dict.get('OldResourceProperties')
 
-        self.rgx = re.compile(r'^Custom::([A-Za-z]+)$')
+        self.rgx = re.compile(r'^Custom::([A-Za-z0-9]+)$')
 
     def handle(self):
 
@@ -123,6 +123,9 @@ class CustomResourceHandler(object):
         success = False
         ret_data = {}
 
+        if not self.physical_resource_id:
+            resp_obj.physical_resource_id = 'SULPH-%s-%s' % (self.logical_resource_id, str(uuid.uuid4()))
+
         if mtc:
             type = mtc.group(1)
             plg = self.manager.getPluginByName(type, category='CFHandlers')
@@ -133,7 +136,6 @@ class CustomResourceHandler(object):
                 plg.plugin_object.setOldProperties(self.old_res_properties)
                 try:
                     if self.request_type == 'Create':
-                        resp_obj.physical_resource_id = 'SULPH-%s-%s' % (self.logical_resource_id, str(uuid.uuid4()))
                         plg.plugin_object.create()
                     elif self.request_type == 'Update':
                         plg.plugin_object.update()
