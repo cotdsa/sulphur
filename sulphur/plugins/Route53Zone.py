@@ -8,6 +8,7 @@ class Route53ZoneHandler(CFCustomResourceHandler):
     #
     # Required IAM permissions:
     # - route53:CreateHostedZone
+    # - route53:DeleteHostedZone
 
 
     def create(self):
@@ -32,5 +33,28 @@ class Route53ZoneHandler(CFCustomResourceHandler):
             'DelegationSet': delegation_set
         }
         self.response.status = 'SUCCESS'
+
+    def update(self):
+        # Documentation states:
+        #
+        # You can update custom resources that require a replacement of the underlying physical resource.
+        # When you update a custom resource in an AWS CloudFormation template,
+        # AWS CloudFormation sends an update request to that custom resource.
+        # If a custom resource requires a replacement,
+        # the new custom resource must send a response with the new physical ID.
+        # When AWS CloudFormation receives the response, it compares the PhysicalResourceId between the old and new custom resources.
+        # If they are different, AWS CloudFormation recognizes the update as a replacement and sends a delete request to the old resource.
+        #
+        # In this case we just need to call create() and CF will issue the delete automatically
+        self.create()
+
+    def delete(self):
+
+        self.response.status = 'FAILED'
+        zone_id = self.response.physical_resource_id
+
+        conn = boto.route53.Route53Connection()
+
+        conn.delete_hosted_zone(hosted_zone_id=zone_id)
 
 
