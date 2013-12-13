@@ -25,7 +25,7 @@ class Route53ZoneHandler(CFCustomResourceHandler):
 
         resp = conn.create_hosted_zone(domain_name=zone_name)
         zone = Zone(self, resp['CreateHostedZoneResponse']['HostedZone'])
-        delegation_set = resp['DelegationSet']['NameServers']
+        delegation_set = resp['CreateHostedZoneResponse']['DelegationSet']['NameServers']
 
         self.response.physical_resource_id = zone.id
         self.response.data = {
