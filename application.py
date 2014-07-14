@@ -1,7 +1,7 @@
 import flask
 import json
 import pprint
-from sulphur.misc import verify_signature, build_signature_string, subscribe_sns_topic
+from sulphur.misc import verify_signature, build_signature_string, subscribe_sns_topic_url
 from sulphur.handler import CustomResourceHandler
 
 application = flask.Flask(__name__)
@@ -34,7 +34,7 @@ def index():
 
     if message_type == 'SubscriptionConfirmation':
         # Handle the subscription request
-        subscribe_sns_topic(token=json_data['Token'], topic_arn=json_data['TopicArn'])
+        subscribe_sns_topic_url(url=json_data['SubscribeURL'])
 
     if message_type == 'Notification':
         subj = json_data.get('Subject', None)

@@ -101,3 +101,7 @@ def subscribe_sns_topic(token, topic_arn, authenticate_on_unsubscribe=False):
     parsed_arn = parse_sns_arn(topic_arn)
     sns_conn = boto.sns.connect_to_region(parsed_arn['region'])
     sns_conn.confirm_subscription(topic=topic_arn, token=token, authenticate_on_unsubscribe=authenticate_on_unsubscribe)
+
+def subscribe_sns_topic_url(url):
+    r = requests.get(url)
+    return r.status_code == 200
