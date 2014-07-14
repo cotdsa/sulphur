@@ -115,7 +115,6 @@ class CustomResourceHandler(object):
 
         manager = CustomResourceHandler.init_manager()
         policy_base = {
-            "Id": "Sulphur-IAM-Policy",
             "Version": "2012-10-17",
             "Statement": []
         }
