@@ -5,11 +5,11 @@ class SetELBCrossZoneHandler(CFCustomResourceHandler):
 
     # This handler allows you to set the CrossZoneLoadBalancing attribute of an ELB
     #
-    # Required IAM permissions:
-    # - elasticloadbalancing:ModifyLoadBalancerAttributes
-    #
     # This module requires boto >= 2.18.0
 
+    required_iam_perms = [
+        'elasticloadbalancing:ModifyLoadBalancerAttributes'
+    ]
 
     def create(self):
 

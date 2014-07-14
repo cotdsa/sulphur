@@ -5,6 +5,8 @@ class CFCustomResourceHandler(IPlugin):
     response = None
     old_properties = None
 
+    required_iam_perms = []
+
     def activate(self):
         super(CFCustomResourceHandler, self).activate()
 

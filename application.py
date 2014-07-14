@@ -1,6 +1,6 @@
 import flask
 import json
-
+import pprint
 from sulphur.misc import verify_signature, build_signature_string, subscribe_sns_topic
 from sulphur.handler import CustomResourceHandler
 
@@ -49,4 +49,4 @@ def index():
 
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0', debug=True)
+    pprint.pprint(CustomResourceHandler.generate_policy())

@@ -6,10 +6,10 @@ from sulphur.abstracts import CFCustomResourceHandler
 class Route53ZoneHandler(CFCustomResourceHandler):
 
     # This handler manages and hosted zone in route 53
-    #
-    # Required IAM permissions:
-    # - route53:CreateHostedZone
-    # - route53:DeleteHostedZone
+    required_iam_perms = [
+        'route53:CreateHostedZone',
+        'route53:DeleteHostedZone'
+    ]
 
     def create(self):
 

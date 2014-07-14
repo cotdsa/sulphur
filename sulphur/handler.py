@@ -86,13 +86,7 @@ class CustomResourceHandler(object):
 
     def __init__(self, input_data_dict):
 
-        # Initialise plugin system
-        anl = PluginFileAnalyzerMathingRegex('custom_res_handler_plugins', r'^[A-Za-z0-9]+\.py$')
-        res = PluginFileLocator(plugin_info_cls=CFCustomResourceHandler)
-        res.setAnalyzers([anl])
-        self.manager = PluginManager(plugin_locator=res, categories_filter={'CFHandlers' : CFCustomResourceHandler})
-        self.manager.setPluginPlaces([dirname(__file__) + '/plugins'])
-        self.manager.collectPlugins()
+        self.manager = self.init_manager()
 
         # Store request data
         self.resource_type = input_data_dict.get('ResourceType')
@@ -107,6 +101,46 @@ class CustomResourceHandler(object):
         self.old_res_properties = input_data_dict.get('OldResourceProperties')
 
         self.rgx = re.compile(r'^Custom::([A-Za-z0-9]+)$')
+
+
+    @staticmethod
+    def init_manager():
+        anl = PluginFileAnalyzerMathingRegex('custom_res_handler_plugins', r'^[A-Za-z0-9]+\.py$')
+        res = PluginFileLocator(plugin_info_cls=CFCustomResourceHandler)
+        res.setAnalyzers([anl])
+        manager = PluginManager(plugin_locator=res, categories_filter={'CFHandlers' : CFCustomResourceHandler})
+        manager.setPluginPlaces([dirname(__file__) + '/plugins'])
+        manager.collectPlugins()
+        return manager
+
+    @staticmethod
+    def generate_policy():
+
+        manager = CustomResourceHandler.init_manager()
+        policy_base = {
+            "Id": "Sulphur-IAM-Policy",
+            "Version": "2012-10-17",
+            "Statement": []
+        }
+
+        policy_statement = {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [],
+            "Resource": ["*"]
+        }
+
+
+        plugins = manager.getPluginsOfCategory('CFHandlers')
+        for plugin in plugins:
+            if plugin.plugin_object.required_iam_perms:
+                plg_policy = policy_statement.copy()
+                plg_policy['Sid'] = plugin.name
+                plg_policy['Action'] = plugin.plugin_object.required_iam_perms
+                policy_base['Statement'].append(plg_policy)
+        return policy_base
+
+
 
     def handle(self):
 

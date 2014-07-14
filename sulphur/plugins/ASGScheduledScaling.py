@@ -7,10 +7,11 @@ class ASGScheduledScalingHandler(CFCustomResourceHandler):
 
     # This handler manages and hosted zone in route 53
     #
-    # Required IAM permissions:
-    # - autoscaling:DescribeScheduledActions
-    # - autoscaling:PutScheduledUpdateGroupAction
-    # - autoscaling:DeleteScheduledAction
+    required_iam_perms = [
+        'autoscaling:DescribeScheduledActions',
+        'autoscaling:PutScheduledUpdateGroupAction',
+        'autoscaling:DeleteScheduledAction'
+    ]
 
     def create(self):
 
