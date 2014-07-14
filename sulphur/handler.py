@@ -1,6 +1,5 @@
 import requests
 import re
-import logging
 import json
 import uuid
 
@@ -9,8 +8,6 @@ from yapsy.PluginManager import PluginManager
 from yapsy.PluginFileLocator import PluginFileAnalyzerMathingRegex, PluginFileLocator
 
 from .abstracts import CFCustomResourceHandler
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class ResponseObject(object):

@@ -8,7 +8,7 @@ application = flask.Flask(__name__)
 
 #Set application.debug=true to enable tracebacks on Beanstalk log output.
 #Make sure to remove this line before deploying to production.
-application.debug = True
+#application.debug = True
 
 
 @application.route('/', methods=['GET', 'POST'])

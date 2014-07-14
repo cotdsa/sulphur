@@ -89,7 +89,7 @@ def verify_signature(cert_url, signature, data):
     cert = requests.get(cert_url)
     if cert.status_code == 200:
         try:
-            decoded_cert = decode(load_pem(cert.content), asn1Spec=rfc2459.Certificate())
+            decoded_cert, _ = decode(load_pem(cert.content), asn1Spec=rfc2459.Certificate())
             pubkey_bits = BitArray(list(decoded_cert['tbsCertificate']['subjectPublicKeyInfo']['subjectPublicKey']))
             rsaobj = rsa.PublicKey.load_pkcs1(pubkey_bits.bytes, format='DER')
             return rsa.verify(data, signature.decode('base64'), rsaobj)
