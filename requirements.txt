@@ -2,5 +2,8 @@ Flask
 boto>=2.19.0
 requests
 yapsy
-pyOpenSSL
+PyASN1
+PyASN1-modules
 python-dateutil
+bitstring
+rsa
